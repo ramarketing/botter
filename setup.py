@@ -30,7 +30,7 @@ if sys.argv[-1] == "tag":
 setup(
     name="botter",
     version=VERSION,
-    description="""Botter bots""",
+    description="""Botter bot wrapper""",
     long_description=readme + "\n\n" + history,
     author="Irving Kcam",
     author_email="irving@ramarketingconsulting.com",
@@ -38,13 +38,9 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        'python-dotenv',
         'requests',
         'selenium'
     ],
-    entry_points={
-        'console_scripts': ['bot=bot.command_line:main'],
-    },
     license="Apache License 2.0",
     zip_safe=False,
     keywords="bot",

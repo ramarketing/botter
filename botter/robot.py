@@ -1,53 +1,38 @@
-import os
 import pdb
-import platform
 import time
 
 
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException, WebDriverException
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.action_chains import ActionChains
 
-from .config import config
 from .logger import BaseLogger
 
 
 class BaseRobot:
-    WAIT_BEFORE_NEXT = 3
 
-    def __init__(self, logger=None, *args, **kwargs):
+    def __init__(
+        self, selenium_url, capabilities, logger=None, debug=False,
+        max_retries=5, *args, **kwargs
+    ):
         assert isinstance(logger, BaseLogger), (
             'Logger must be a BaseLogger instance.'
         )
 
         self.logger = logger or BaseLogger()
+        self.selenium_url = selenium_url
+        self.capabilities = capabilities
+        self.max_retries = max_retries
+        self.debug = debug
 
     def get_driver(self, size=None):
         if hasattr(self, 'driver') and self.driver:
             return self.driver
 
-        options = Options()
-        options.add_argument('disable-infobars')
-        options.add_argument('disable-extensions')
-        options.add_argument('profile-directory=Default')
-        options.add_argument('incognito')
-        options.add_argument('disable-plugins-discovery')
-        options.add_argument(
-            'user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) '
-            'AppleWebKit/605.1.15 (KHTML, like Gecko) '
-            'Version/13.1 Safari/605.1.15'
+        driver = webdriver.Remote(
+            command_executor=self.selenium_url,
+            desired_capabilities=self.capabilities
         )
-        if platform.system() == 'Windows':
-            driver = webdriver.Chrome(
-                chrome_options=options,
-                executable_path=os.path.join(
-                    os.path.normpath(os.getcwd()),
-                    'chromedriver.exe'
-                )
-            )
-        else:
-            driver = webdriver.Chrome(chrome_options=options)
 
         if size:
             try:
@@ -78,13 +63,6 @@ class BaseRobot:
             success = False
 
             try:
-                max_retries = int(
-                    kwargs.get('max_retries', config.MAX_RETRIES)
-                )
-            except ValueError:
-                max_retries = config.MAX_RETRIES
-
-            try:
                 timeout = int(kwargs.get('timeout', 0))
             except ValueError:
                 timeout = 0
@@ -98,7 +76,7 @@ class BaseRobot:
             while not success:
                 retry += 1
 
-                if retry > max_retries:
+                if retry > self.max_retries:
                     if raise_exception:
                         self._start_debug()
                         raise TimeoutException
@@ -194,12 +172,12 @@ class BaseRobot:
 
     def wait(self, seconds):
         for second in range(seconds):
-            if config.DEBUG:
+            if self.debug:
                 print('Wait: {:d}/{:d}'.format(second + 1, seconds))
             time.sleep(1)
 
     def _start_debug(self, *args, **kwargs):
         if 'message' in kwargs:
             print(kwargs['message'])
-        if config.PDB_DEBUG:
+        if self.debug:
             pdb.set_trace()
