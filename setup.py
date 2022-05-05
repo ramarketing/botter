@@ -11,7 +11,7 @@ from setuptools import setup, find_packages
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 # Read version from app
-with open("bot/__init__.py", "rb") as f:
+with open("botter/__init__.py", "rb") as f:
     VERSION = str(
         re.search('__version__ = "(.+?)"', f.read().decode("utf-8")).group(1)
     )
