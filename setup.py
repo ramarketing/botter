@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import os
-import re
 import sys
 
 from setuptools import setup, find_packages
@@ -11,10 +10,7 @@ from setuptools import setup, find_packages
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 # Read version from app
-with open("botter/__init__.py", "rb") as f:
-    VERSION = str(
-        re.search('__version__ = "(.+?)"', f.read().decode("utf-8")).group(1)
-    )
+VERSION = '0.1.0'
 
 with open(os.path.join(os.path.dirname(__file__), "README.md")) as readme_file:
     readme = readme_file.read()
