@@ -1,15 +1,14 @@
 from datetime import datetime
 import os
 
-from . import config
-
 
 class BaseLogger:
-    def __init__(self, filename='log'):
+    def __init__(self, base_dir, filename='log', debug=False):
         assert isinstance(filename, str), "Filename must be a string instace."
         if not filename.endswith('.log'):
             filename = '{}.log'.format(filename)
-        self.file = os.path.join(config.BASE_DIR, filename)
+        self.file = os.path.join(base_dir, filename)
+        self.debug = debug
 
     def __call__(self, data=None, instance=None):
         if instance:
@@ -28,7 +27,7 @@ class BaseLogger:
     def append_to_file(self, line):
         try:
             with open(self.file, 'a') as file:
-                if config.DEBUG:
+                if self.debug:
                     print(line)
                 file.write('\n' + line)
         except Exception:
