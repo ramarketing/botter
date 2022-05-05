@@ -15,6 +15,8 @@ class BaseRobot:
         self, selenium_url, capabilities, base_dir, logger=None, debug=False,
         max_retries=5, *args, **kwargs
     ):
+        self.logger = logger or BaseLogger(base_dir=base_dir, debug=self.debug)
+
         assert isinstance(logger, BaseLogger), (
             'Logger must be a BaseLogger instance.'
         )
@@ -23,7 +25,6 @@ class BaseRobot:
         self.capabilities = capabilities
         self.max_retries = max_retries
         self.debug = debug
-        self.logger = logger or BaseLogger(base_dir=base_dir, debug=self.debug)
 
     def get_driver(self, size=None):
         if hasattr(self, 'driver') and self.driver:
