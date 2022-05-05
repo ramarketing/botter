@@ -16,11 +16,6 @@ class BaseRobot:
         max_retries=5, *args, **kwargs
     ):
         self.logger = logger or BaseLogger(base_dir=base_dir, debug=debug)
-
-        assert isinstance(logger, BaseLogger), (
-            'Logger must be a BaseLogger instance.'
-        )
-
         self.selenium_url = selenium_url
         self.capabilities = capabilities
         self.max_retries = max_retries
