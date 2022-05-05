@@ -15,7 +15,7 @@ class BaseRobot:
         self, selenium_url, capabilities, base_dir, logger=None, debug=False,
         max_retries=5, *args, **kwargs
     ):
-        self.logger = logger or BaseLogger(base_dir=base_dir, debug=self.debug)
+        self.logger = logger or BaseLogger(base_dir=base_dir, debug=debug)
 
         assert isinstance(logger, BaseLogger), (
             'Logger must be a BaseLogger instance.'
