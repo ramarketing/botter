@@ -12,10 +12,10 @@ from .logger import BaseLogger
 class BaseRobot:
 
     def __init__(
-        self, selenium_url, capabilities, base_dir, logger=None, debug=False,
+        self, selenium_url, capabilities, logger=None, debug=False,
         max_retries=5, *args, **kwargs
     ):
-        self.logger = logger or BaseLogger(base_dir=base_dir, debug=debug)
+        self.logger = logger or BaseLogger(debug=debug)
         self.selenium_url = selenium_url
         self.capabilities = capabilities
         self.max_retries = max_retries
